@@ -4,6 +4,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionStyle,
   type MotionValue,
 } from "framer-motion";
 import { Moon, SunMedium } from "lucide-react";
@@ -98,7 +99,7 @@ const DockIcon = forwardRef<
       {isActive && (
         <motion.span
           layoutId="dock-indicator"
-          className="absolute inset-0 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)]/80"
+          className="dock-active-pill absolute inset-0 rounded-full"
           transition={{ type: "spring", stiffness: 350, damping: 25 }}
         />
       )}
@@ -106,7 +107,7 @@ const DockIcon = forwardRef<
         style={{ scale, y }}
         className="relative z-10 flex items-center justify-center"
       >
-        <Icon className="h-4 w-4 md:h-5 md:w-5 lg:h-7 lg:w-7" />
+        <Icon className="dock-icon h-4 w-4 md:h-5 md:w-5 lg:h-7 lg:w-7" />
       </motion.span>
     </motion.button>
   );
@@ -254,14 +255,22 @@ export function LiquidDock({
     (value) => `${((value * 0.12) % 260) - 60}% 50%`,
   );
 
+  // Rotates the edge reflection around the border as the page scrolls.
+  const smoothScrollY = useSpring(scrollY, { stiffness: 120, damping: 30 });
+  const glareAngle = useTransform(
+    smoothScrollY,
+    (value) => `${(135 + value * 0.18) % 360}deg`,
+  );
+
   const dropTrailLeft = useTransform(dropTrail, (v) => `${v * 100}%`);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      className="liquid-glass pointer-events-auto relative flex max-w-full items-center gap-0.5 rounded-[28px] border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] p-1.5 shadow-[0_10px_40px_0_var(--shadow-glass)] sm:gap-1 sm:p-2 md:gap-2 lg:gap-3 lg:rounded-[36px] lg:p-3"
+      style={{ "--glare-angle": glareAngle } as MotionStyle}
+      className="liquid-glass pointer-events-auto relative flex max-w-full items-center gap-0.5 rounded-[28px] p-1.5 sm:gap-1 sm:p-2 md:gap-2 lg:gap-3 lg:rounded-[36px] lg:p-3"
     >
       <svg
         width="0"
@@ -358,6 +367,6 @@ export function LiquidDock({
         }}
         showHoverLabels={showHoverLabels}
       />
-    </div>
+    </motion.div>
   );
 }
