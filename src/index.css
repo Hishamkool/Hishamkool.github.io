@@ -95,7 +95,6 @@ a {
 .glass-panel {
   border-radius: 28px;
   backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
 }
 
 .noise-overlay {
@@ -126,7 +125,6 @@ a {
     rgba(255, 255, 255, 0.04) 100%
   );
   backdrop-filter: blur(14px) saturate(110%) brightness(1.04);
-  -webkit-backdrop-filter: blur(14px) saturate(110%) brightness(1.04);
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.08),
     0 14px 34px rgba(15, 23, 42, 0.14),
@@ -142,7 +140,6 @@ a {
     rgba(255, 255, 255, 0.015) 100%
   );
   backdrop-filter: blur(14px) saturate(110%);
-  -webkit-backdrop-filter: blur(14px) saturate(110%);
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.4),
     0 14px 34px rgba(0, 0, 0, 0.45),
