@@ -28,7 +28,7 @@ type LiquidDockProps = {
   activeSection: string;
   onNavigate: (id: string) => void;
   theme: "light" | "dark";
-  onToggleTheme: () => void;
+  onToggleTheme: (origin: { x: number; y: number }) => void;
   showHoverLabels?: boolean;
 };
 
@@ -64,7 +64,7 @@ const DockIcon = forwardRef<
     slotCount: number;
     mouseFraction: MotionValue<number>;
     isActive?: boolean;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     showHoverLabels?: boolean;
   }
 >(function DockIcon(
@@ -349,7 +349,13 @@ export function LiquidDock({
         }
         slotCount={slotCount}
         mouseFraction={mouseFraction}
-        onClick={onToggleTheme}
+        onClick={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          onToggleTheme({
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          });
+        }}
         showHoverLabels={showHoverLabels}
       />
     </div>

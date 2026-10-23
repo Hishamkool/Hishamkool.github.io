@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { AnimatedCounter } from "./components/AnimatedCounter";
 import { LanguageTube } from "./components/LanguageTube";
 import { LiquidDock } from "./components/LiquidDock";
@@ -775,6 +776,43 @@ function App() {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  const toggleTheme = ({ x, y }: { x: number; y: number }) => {
+    const next = theme === "light" ? "dark" : "light";
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (!document.startViewTransition || reduceMotion) {
+      setTheme(next);
+      return;
+    }
+
+    // Expand the new theme as a circle from the toggle button.
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setTheme(next));
+      document.documentElement.classList.toggle("dark", next === "dark");
+    });
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${radius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 900,
+          easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+    });
+  };
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.id);
@@ -1629,9 +1667,7 @@ function App() {
           activeSection={activeSection}
           onNavigate={scrollToSection}
           theme={theme}
-          onToggleTheme={() =>
-            setTheme((current) => (current === "light" ? "dark" : "light"))
-          }
+          onToggleTheme={toggleTheme}
           showHoverLabels={showDockHoverLabels}
         />
       </div>
