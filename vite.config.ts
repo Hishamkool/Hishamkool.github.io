@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/HishamKool_Portfolio/",
+  base: "/",
   server: { host: true },
   plugins: [react(), tailwindcss()],
 });
