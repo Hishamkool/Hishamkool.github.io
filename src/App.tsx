@@ -28,6 +28,7 @@ import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { AnimatedCounter } from "./components/AnimatedCounter";
 import { ContactForm } from "./components/ContactForm";
+import { InstallAppButton } from "./components/InstallAppButton";
 import { HeroSection } from "./components/HeroSection";
 import { LanguageTube } from "./components/LanguageTube";
 import { LiquidDock, LiquidThemeToggle } from "./components/LiquidDock";
@@ -812,6 +813,15 @@ function App() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
+    // Match the browser/OS status bar to the top of the page background.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute(
+        "content",
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--bg-gradient-from")
+          .trim(),
+      );
   }, [theme]);
 
   const toggleTheme = ({ x, y }: { x: number; y: number }) => {
@@ -910,7 +920,7 @@ function App() {
         <div className="noise-overlay opacity-35" />
       </div>
 
-      <header className="mx-auto w-full max-w-6xl px-4 pb-8 pt-6 md:px-6">
+      <header className="mx-auto w-full max-w-6xl px-4 pb-8 pt-[calc(1.5rem+env(safe-area-inset-top))] md:px-6">
         <motion.div
           initial={{ opacity: 0, y: -18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -926,6 +936,10 @@ function App() {
                 Portfolio
               </p>
             </div>
+          </div>
+          {/* Right margin on mobile keeps clear of the floating theme toggle. */}
+          <div className="mr-14 md:mr-0">
+            <InstallAppButton />
           </div>
         </motion.div>
       </header>
