@@ -30,7 +30,7 @@ import { AnimatedCounter } from "./components/AnimatedCounter";
 import { ContactForm } from "./components/ContactForm";
 import { HeroSection } from "./components/HeroSection";
 import { LanguageTube } from "./components/LanguageTube";
-import { LiquidDock } from "./components/LiquidDock";
+import { LiquidDock, LiquidThemeToggle } from "./components/LiquidDock";
 import { ProjectImage } from "./components/ProjectImage";
 
 type NavItem = {
@@ -209,7 +209,8 @@ const timelineNodes: TimelineNode[] = [
       "Integrated REST APIs, real-time updates, and Firebase Cloud Messaging (FCM).",
       "Used Git for version control and collaboration.",
     ],
-    projects: "CSSD, DiaLog, Grapes Office Log, Smart Device Management, MyHRM QR, NameBoard, BSA",
+    projects:
+      "CSSD, DiaLog, Grapes Office Log, Smart Device Management, MyHRM QR, NameBoard, BSA",
     icon: BriefcaseBusiness,
   },
   {
@@ -247,7 +248,8 @@ const projects: Project[] = [
     links: {
       github: "https://github.com/Hishamkool/portfolio_benjamin",
       live: "https://benjamincs.com",
-      figma: "https://www.figma.com/design/4SXzDdrTzOgUe91RpnbBtS/portfolio-Benjamin",
+      figma:
+        "https://www.figma.com/design/4SXzDdrTzOgUe91RpnbBtS/portfolio-Benjamin",
     },
   },
   {
@@ -691,7 +693,7 @@ const education: EducationEntry[] = [
 const languages: LanguageEntry[] = [
   { name: "English", level: "Full Professional Proficiency", percent: 95 },
   { name: "Hindi", level: "Full Professional Proficiency", percent: 95 },
-  { name: "Tamil", level: "Native / Bilingual Proficiency", percent: 80 },
+  { name: "Tamil", level: "Native / Bilingual Proficiency", percent: 90 },
   { name: "Malayalam", level: "Native Proficiency", percent: 100 },
 ];
 
@@ -740,9 +742,7 @@ function App() {
   const [projectSearch, setProjectSearch] = useState("");
   const [searchDescriptions, setSearchDescriptions] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down">(
-    "down",
-  );
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
   const lastScrollYRef = useRef(0);
   const showDockHoverLabels = true;
 
@@ -777,8 +777,7 @@ function App() {
     return byCategory.filter((project) => {
       const matchesTitle = project.title.toLowerCase().includes(query);
       const matchesDescription =
-        searchDescriptions &&
-        project.description.toLowerCase().includes(query);
+        searchDescriptions && project.description.toLowerCase().includes(query);
       return matchesTitle || matchesDescription;
     });
   }, [projectFilter, projectSearch, searchDescriptions]);
@@ -965,15 +964,15 @@ function App() {
                 suffix="+"
                 once={false}
               />{" "}
-              cross-platform mobile apps using Flutter across healthcare, workforce, and
-              smart system domains, improving UI responsiveness by up to 60%
-              through adaptive layouts for mobile, tablet, and kiosk screens.
-              Skilled in building clean, maintainable interfaces using
-              React.js and Tailwind CSS, with a strong foundation in state
+              cross-platform mobile apps using Flutter across healthcare,
+              workforce, and smart system domains, improving UI responsiveness
+              by up to 60% through adaptive layouts for mobile, tablet, and
+              kiosk screens. Skilled in building clean, maintainable interfaces
+              using React.js and Tailwind CSS, with a strong foundation in state
               management (Provider), REST API integration, and real-time
               features via Firebase. Currently contributing to Automax, an
-              enterprise workflow automation platform, while continuing to
-              grow expertise across the React ecosystem.
+              enterprise workflow automation platform, while continuing to grow
+              expertise across the React ecosystem.
             </p>
 
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -1001,9 +1000,7 @@ function App() {
                 },
                 {
                   label: "UI Responsiveness Gain",
-                  node: (
-                    <AnimatedCounter value={60} suffix="%" once={false} />
-                  ),
+                  node: <AnimatedCounter value={60} suffix="%" once={false} />,
                 },
                 {
                   label: "Companies & Clients",
@@ -1195,7 +1192,9 @@ function App() {
             >
               <span
                 className={`flex h-4 w-7 items-center rounded-full p-0.5 transition-colors ${
-                  searchDescriptions ? "bg-white/30" : "bg-[var(--color-bg-soft)]"
+                  searchDescriptions
+                    ? "bg-white/30"
+                    : "bg-[var(--color-bg-soft)]"
                 }`}
               >
                 <motion.span
@@ -1651,6 +1650,10 @@ function App() {
           </GlassPanel>
         </section>
       </main>
+
+      <div className="pointer-events-none fixed right-4 top-[max(1rem,env(safe-area-inset-top))] z-50 md:hidden">
+        <LiquidThemeToggle theme={theme} onToggleTheme={toggleTheme} />
+      </div>
 
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[max(1rem,env(safe-area-inset-bottom))] md:px-6">
         <LiquidDock

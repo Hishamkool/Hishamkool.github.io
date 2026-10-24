@@ -144,11 +144,11 @@ a {
     rgba(255, 255, 255, 0.015) 100%
   );
   backdrop-filter: blur(14px) saturate(110%);
-  box-shadow:
+  /* box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.4),
     0 14px 34px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04); */
 }
 
 /* Soft top reflection, like light hitting the upper curve of the glass. */
@@ -337,11 +337,23 @@ a {
 .hero-portrait-fade {
   -webkit-mask-image:
     linear-gradient(to bottom, #000 62%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    linear-gradient(
+      to right,
+      transparent 0%,
+      #000 14%,
+      #000 86%,
+      transparent 100%
+    );
   -webkit-mask-composite: source-in;
   mask-image:
     linear-gradient(to bottom, #000 62%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    linear-gradient(
+      to right,
+      transparent 0%,
+      #000 14%,
+      #000 86%,
+      transparent 100%
+    );
   mask-composite: intersect;
 }
 

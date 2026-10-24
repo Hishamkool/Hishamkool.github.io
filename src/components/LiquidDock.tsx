@@ -56,6 +56,24 @@ function useMagnify(
   };
 }
 
+// Scroll-driven sheen and rim glare shared by every liquid-glass surface.
+function useLiquidGlass() {
+  const { scrollY } = useScroll();
+  const sheenPosition = useTransform(
+    scrollY,
+    (value) => `${((value * 0.12) % 260) - 60}% 50%`,
+  );
+
+  // Rotates the edge reflection around the border as the page scrolls.
+  const smoothScrollY = useSpring(scrollY, { stiffness: 120, damping: 30 });
+  const glareAngle = useTransform(
+    smoothScrollY,
+    (value) => `${(135 + value * 0.18) % 360}deg`,
+  );
+
+  return { sheenPosition, glareAngle };
+}
+
 const DockIcon = forwardRef<
   HTMLButtonElement,
   {
@@ -67,6 +85,7 @@ const DockIcon = forwardRef<
     isActive?: boolean;
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     showHoverLabels?: boolean;
+    className?: string;
   }
 >(function DockIcon(
   {
@@ -78,6 +97,7 @@ const DockIcon = forwardRef<
     isActive,
     onClick,
     showHoverLabels = true,
+    className = "flex",
   },
   ref,
 ) {
@@ -89,10 +109,10 @@ const DockIcon = forwardRef<
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="group relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--color-text-primary)] sm:h-11 sm:w-11 md:h-14 md:w-14 lg:h-20 lg:w-20"
+      className={`group relative z-10 ${className} h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--color-text-primary)] min-[380px]:h-12 min-[380px]:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20`}
     >
       {showHoverLabels && (
-        <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] font-medium tracking-[0.12em] text-[var(--color-text-primary)] uppercase opacity-0 shadow-[0_8px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 md:-top-11 md:text-[11px]">
+        <span className="pointer-events-none absolute -top-10 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] font-medium tracking-[0.12em] text-[var(--color-text-primary)] uppercase opacity-0 shadow-[0_8px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 md:-top-11 md:block md:text-[11px]">
           {label}
         </span>
       )}
@@ -107,7 +127,7 @@ const DockIcon = forwardRef<
         style={{ scale, y }}
         className="relative z-10 flex items-center justify-center"
       >
-        <Icon className="dock-icon h-4 w-4 md:h-5 md:w-5 lg:h-7 lg:w-7" />
+        <Icon className="dock-icon h-[22px] w-[22px] md:h-5 md:w-5 lg:h-7 lg:w-7" />
       </motion.span>
     </motion.button>
   );
@@ -249,18 +269,7 @@ export function LiquidDock({
   const blobWidth = useTransform(dropSize, (size) => `${size}px`);
   const blobHeight = useTransform(dropSize, (size) => `${size}px`);
 
-  const { scrollY } = useScroll();
-  const sheenPosition = useTransform(
-    scrollY,
-    (value) => `${((value * 0.12) % 260) - 60}% 50%`,
-  );
-
-  // Rotates the edge reflection around the border as the page scrolls.
-  const smoothScrollY = useSpring(scrollY, { stiffness: 120, damping: 30 });
-  const glareAngle = useTransform(
-    smoothScrollY,
-    (value) => `${(135 + value * 0.18) % 360}deg`,
-  );
+  const { sheenPosition, glareAngle } = useLiquidGlass();
 
   const dropTrailLeft = useTransform(dropTrail, (v) => `${v * 100}%`);
 
@@ -270,7 +279,7 @@ export function LiquidDock({
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
       style={{ "--glare-angle": glareAngle } as MotionStyle}
-      className="liquid-glass pointer-events-auto relative flex max-w-full items-center gap-0.5 rounded-[28px] p-1.5 sm:gap-1 sm:p-2 md:gap-2 lg:gap-3 lg:rounded-[36px] lg:p-3"
+      className="liquid-glass pointer-events-auto relative flex w-full max-w-full items-center justify-between rounded-[32px] p-2 md:w-auto md:justify-start md:gap-2 lg:gap-3 lg:rounded-[36px] lg:p-3"
     >
       <svg
         width="0"
@@ -358,6 +367,7 @@ export function LiquidDock({
         }
         slotCount={slotCount}
         mouseFraction={mouseFraction}
+        className="hidden md:flex"
         onClick={(event) => {
           const rect = event.currentTarget.getBoundingClientRect();
           onToggleTheme({
@@ -368,5 +378,41 @@ export function LiquidDock({
         showHoverLabels={showHoverLabels}
       />
     </motion.div>
+  );
+}
+
+// Round liquid-glass theme toggle that floats at the top right on mobile,
+// where the dock has no room for it.
+export function LiquidThemeToggle({
+  theme,
+  onToggleTheme,
+}: Pick<LiquidDockProps, "theme" | "onToggleTheme">) {
+  const { sheenPosition, glareAngle } = useLiquidGlass();
+  const Icon = theme === "light" ? Moon : SunMedium;
+
+  return (
+    <motion.button
+      type="button"
+      aria-label="Toggle color mode"
+      whileTap={{ scale: 0.92 }}
+      onClick={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        onToggleTheme({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
+      }}
+      style={{ "--glare-angle": glareAngle } as MotionStyle}
+      className="liquid-glass pointer-events-auto relative flex h-12 w-12 items-center justify-center rounded-full text-[var(--color-text-primary)]"
+    >
+      <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
+        <motion.span
+          aria-hidden="true"
+          style={{ backgroundPosition: sheenPosition }}
+          className="liquid-sheen absolute inset-[-40%] z-[1]"
+        />
+      </span>
+      <Icon className="dock-icon relative z-10 h-5 w-5" />
+    </motion.button>
   );
 }
