@@ -345,6 +345,11 @@ a {
   mask-composite: intersect;
 }
 
+/* Black brand marks (GitHub, Vercel) would vanish on the dark background. */
+.dark .skill-icon--mono {
+  filter: invert(1) drop-shadow(0 6px 14px var(--shadow-card));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

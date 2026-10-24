@@ -2,7 +2,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Award,
   ArrowRight,
+  Boxes,
   BriefcaseBusiness,
+  Cloud,
   Code2,
   ExternalLink,
   FolderKanban,
@@ -10,11 +12,14 @@ import {
   Heart,
   House,
   Languages as LanguagesIcon,
+  Layers,
   Mail,
+  Network,
   Search,
   Sparkles,
   User,
   Users,
+  Webhook,
   X,
   Zap,
 } from "lucide-react";
@@ -68,10 +73,22 @@ type TimelineNode = {
   icon: typeof BriefcaseBusiness;
 };
 
+// A skill shows either a logo/illustration from public/skills or, when no
+// brand logo exists, a lucide icon. `mono` logos are black and get inverted
+// in dark mode.
+type Skill = {
+  name: string;
+  image?: string;
+  icon?: typeof Code2;
+  detail?: string;
+  mono?: boolean;
+};
+
 type SkillCategory = {
   title: string;
   icon: typeof Code2;
-  items: string[];
+  variant: "logo" | "illustration";
+  items: Skill[];
 };
 
 type Certification = {
@@ -99,9 +116,9 @@ type LanguageEntry = {
 const navItems: NavItem[] = [
   { id: "home", label: "Home", icon: House },
   { id: "about", label: "About", icon: User },
-  { id: "road", label: "Timeline", icon: BriefcaseBusiness },
-  { id: "projects", label: "Projects", icon: FolderKanban },
   { id: "skills", label: "Skills", icon: Sparkles },
+  { id: "projects", label: "Projects", icon: FolderKanban },
+  { id: "road", label: "Timeline", icon: BriefcaseBusiness },
   { id: "credentials", label: "Credentials", icon: GraduationCap },
   { id: "contact", label: "Contact Me", icon: Mail },
 ];
@@ -572,48 +589,61 @@ const skillCategories: SkillCategory[] = [
   {
     title: "Hard Skills",
     icon: Code2,
+    variant: "logo",
     items: [
-      "React.js",
-      "React Native",
-      "Tailwind CSS",
-      "JavaScript",
-      "HTML",
-      "Flutter",
-      "Dart",
-      "Java",
-      "Python",
-      "C",
-      "C++",
-      "Provider (State Management)",
-      "MVC",
-      "MVVM",
-      "Firebase (Auth, Cloud Messaging)",
-      "REST API Integration (Dio, Retrofit)",
-      "Cloudinary",
-      "EmailJS",
-      "Git",
-      "GitHub",
-      "Vercel",
-      "Android Studio",
-      "VS Code",
-      "Figma",
+      { name: "React.js", image: "react.svg" },
+      { name: "React Native", image: "react.svg" },
+      { name: "Tailwind CSS", image: "tailwindcss.svg" },
+      { name: "JavaScript", image: "javascript.svg" },
+      { name: "HTML", image: "html5.svg" },
+      { name: "Flutter", image: "flutter.svg" },
+      { name: "Dart", image: "dart.svg" },
+      { name: "Java", image: "java.svg" },
+      { name: "Python", image: "python.svg" },
+      { name: "C", image: "c.svg" },
+      { name: "C++", image: "cplusplus.svg" },
+      { name: "Provider", icon: Layers, detail: "State Management" },
+      { name: "MVC", icon: Boxes },
+      { name: "MVVM", icon: Network },
+      {
+        name: "Firebase",
+        image: "firebase.svg",
+        detail: "Auth, Cloud Messaging",
+      },
+      { name: "REST APIs", icon: Webhook, detail: "Dio, Retrofit" },
+      { name: "Cloudinary", icon: Cloud },
+      { name: "EmailJS", icon: Mail },
+      { name: "Git", image: "git.svg" },
+      { name: "GitHub", image: "github.svg", mono: true },
+      { name: "Vercel", image: "vercel.svg", mono: true },
+      { name: "Android Studio", image: "androidstudio.svg" },
+      { name: "VS Code", image: "vscode.svg" },
+      { name: "Figma", image: "figma.svg" },
     ],
   },
   {
     title: "Soft Skills",
     icon: Users,
+    variant: "illustration",
     items: [
-      "Attention to Detail",
-      "Communication",
-      "Results-Driven",
-      "Task Prioritization",
-      "Continuous Improvement",
+      { name: "Attention to Detail", image: "attention.png" },
+      { name: "Communication", image: "communication.png" },
+      { name: "Results-Driven", image: "results.png" },
+      { name: "Task Prioritization", image: "prioritization.png" },
+      { name: "Continuous Improvement", image: "improvement.png" },
     ],
   },
   {
     title: "Interests",
     icon: Heart,
-    items: ["Travel", "Photography", "Fitness", "Meditation", "Singing"],
+    variant: "illustration",
+    items: [
+      { name: "Travel", image: "travel.png" },
+      { name: "Photography", image: "photography.png" },
+      { name: "Fitness", image: "fitness.png" },
+      { name: "Meditation", image: "meditation.png" },
+      { name: "Singing", image: "singing.png" },
+    ],
   },
 ];
 
@@ -995,85 +1025,96 @@ function App() {
           </GlassPanel>
         </section>
 
-        <section id="road" className="scroll-mt-28 py-12 md:py-14">
-          <div className="mb-10 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
-                Experience
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
-                The road so far
-              </h2>
-            </div>
+        <section id="skills" className="scroll-mt-28 py-12 md:py-14">
+          <div className="mb-8">
+            <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
+              Toolbox
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
+              Skills
+            </h2>
           </div>
 
-          <div className="relative ml-2 space-y-8 before:absolute before:left-[18px] before:top-4 before:h-[calc(100%-2rem)] before:w-px before:bg-[linear-gradient(to_bottom,rgba(146,160,255,0.85),rgba(146,160,255,0.05))] md:ml-4">
-            {timelineNodes.map((node, index) => (
-              <motion.article
-                key={node.id}
-                initial={{
-                  opacity: 0,
-                  y: scrollDirection === "down" ? 56 : -56,
-                }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{
-                  duration: 0.5,
-                  ease: easing,
-                  delay: Math.min(index, 3) * 0.05,
-                }}
-                className="relative pl-12"
+          <div className="space-y-14">
+            {[
+              skillCategories.filter((c) => c.variant === "logo"),
+              skillCategories.filter((c) => c.variant === "illustration"),
+            ].map((row, rowIndex) => (
+              <div
+                key={rowIndex}
+                className={
+                  rowIndex === 1 ? "grid gap-14 lg:grid-cols-2" : undefined
+                }
               >
-                <div className="absolute left-0 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)] text-[var(--color-accent-blue)] shadow-[0_6px_20px_0_var(--shadow-card)]">
-                  <node.icon className="h-4 w-4" />
-                </div>
-                <GlassPanel className="p-5 md:p-6">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.22em] text-[var(--color-text-muted)]">
-                        {node.type}
+                {row.map((category) => (
+                  <div key={category.title}>
+                    <div className="mb-6 flex items-center gap-3">
+                      <category.icon className="h-4 w-4 text-[var(--color-accent-blue)]" />
+                      <p className="text-sm font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
+                        {category.title}
                       </p>
-                      <h3 className="mt-2 text-xl font-semibold text-[var(--color-text-primary)]">
-                        {node.title}
-                      </h3>
-                      <p className="text-sm text-[var(--color-text-secondary)]">
-                        {node.subtitle}
-                      </p>
+                      <span className="h-px flex-1 bg-gradient-to-r from-[var(--color-text-muted)]/30 to-transparent" />
                     </div>
-                    <span className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)]/70 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
-                      {node.dateRange}
-                    </span>
+                    <motion.ul
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.2 }}
+                      variants={{
+                        show: { transition: { staggerChildren: 0.035 } },
+                      }}
+                      className={
+                        category.variant === "logo"
+                          ? "grid grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] gap-x-2 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))]"
+                          : "grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] gap-x-2 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))]"
+                      }
+                    >
+                      {category.items.map((skill) => (
+                        <motion.li
+                          key={skill.name}
+                          variants={{
+                            hidden: { opacity: 0, y: 14, scale: 0.9 },
+                            show: {
+                              opacity: 1,
+                              y: 0,
+                              scale: 1,
+                              transition: { duration: 0.4, ease: easing },
+                            },
+                          }}
+                          title={skill.detail}
+                          className="group flex flex-col items-center gap-3 text-center"
+                        >
+                          <div
+                            className={`flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:scale-110 ${
+                              category.variant === "logo"
+                                ? "h-12 w-12"
+                                : "h-16 w-16"
+                            }`}
+                          >
+                            {skill.image ? (
+                              <img
+                                src={`${import.meta.env.BASE_URL}skills/${skill.image}`}
+                                alt=""
+                                loading="lazy"
+                                className={`h-full w-full object-contain drop-shadow-[0_6px_14px_var(--shadow-card)] ${
+                                  skill.mono ? "skill-icon--mono" : ""
+                                }`}
+                              />
+                            ) : skill.icon ? (
+                              <skill.icon
+                                className="h-10 w-10 text-[var(--color-accent-blue)]"
+                                strokeWidth={1.6}
+                              />
+                            ) : null}
+                          </div>
+                          <span className="text-xs leading-snug text-[var(--color-text-secondary)] transition-colors group-hover:text-[var(--color-text-primary)]">
+                            {skill.name}
+                          </span>
+                        </motion.li>
+                      ))}
+                    </motion.ul>
                   </div>
-                  <ul className="mt-4 max-w-2xl list-disc space-y-1.5 pl-4 text-[var(--color-text-secondary)]">
-                    {node.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                  {node.projects && (
-                    <p className="mt-4 text-sm text-[var(--color-text-muted)]">
-                      <span className="uppercase tracking-[0.14em]">
-                        Projects:
-                      </span>{" "}
-                      {node.projects}
-                    </p>
-                  )}
-                  {node.certificate && (
-                    <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-                      <span className="uppercase tracking-[0.14em]">
-                        Certificate:
-                      </span>{" "}
-                      <a
-                        href={`https://${node.certificate}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[var(--color-accent-blue)] hover:underline"
-                      >
-                        {node.certificate}
-                      </a>
-                    </p>
-                  )}
-                </GlassPanel>
-              </motion.article>
+                ))}
+              </div>
             ))}
           </div>
         </section>
@@ -1324,46 +1365,85 @@ function App() {
           )}
         </section>
 
-        <section id="skills" className="scroll-mt-28 py-12 md:py-14">
-          <div className="mb-8">
-            <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
-              Toolbox
-            </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
-              Skills
-            </h2>
+        <section id="road" className="scroll-mt-28 py-12 md:py-14">
+          <div className="mb-10 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
+                Experience
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
+                The road so far
+              </h2>
+            </div>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-3">
-            {skillCategories.map((category, index) => (
-              <motion.div
-                key={category.title}
-                initial={{ opacity: 0, y: 18 }}
+          <div className="relative ml-2 space-y-8 before:absolute before:left-[18px] before:top-4 before:h-[calc(100%-2rem)] before:w-px before:bg-[linear-gradient(to_bottom,rgba(146,160,255,0.85),rgba(146,160,255,0.05))] md:ml-4">
+            {timelineNodes.map((node, index) => (
+              <motion.article
+                key={node.id}
+                initial={{
+                  opacity: 0,
+                  y: scrollDirection === "down" ? 56 : -56,
+                }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, ease: easing, delay: index * 0.08 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{
+                  duration: 0.5,
+                  ease: easing,
+                  delay: Math.min(index, 3) * 0.05,
+                }}
+                className="relative pl-12"
               >
-                <GlassPanel className="h-full p-5 md:p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-bg-soft)] text-[var(--color-accent-blue)]">
-                      <category.icon className="h-4 w-4" />
+                <div className="absolute left-0 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)] text-[var(--color-accent-blue)] shadow-[0_6px_20px_0_var(--shadow-card)]">
+                  <node.icon className="h-4 w-4" />
+                </div>
+                <GlassPanel className="p-5 md:p-6">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.22em] text-[var(--color-text-muted)]">
+                        {node.type}
+                      </p>
+                      <h3 className="mt-2 text-xl font-semibold text-[var(--color-text-primary)]">
+                        {node.title}
+                      </h3>
+                      <p className="text-sm text-[var(--color-text-secondary)]">
+                        {node.subtitle}
+                      </p>
                     </div>
-                    <p className="text-sm font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
-                      {category.title}
-                    </p>
+                    <span className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)]/70 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
+                      {node.dateRange}
+                    </span>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {category.items.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface)]/70 px-3 py-1.5 text-xs text-[var(--color-text-secondary)]"
-                      >
-                        {item}
-                      </span>
+                  <ul className="mt-4 max-w-2xl list-disc space-y-1.5 pl-4 text-[var(--color-text-secondary)]">
+                    {node.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
                     ))}
-                  </div>
+                  </ul>
+                  {node.projects && (
+                    <p className="mt-4 text-sm text-[var(--color-text-muted)]">
+                      <span className="uppercase tracking-[0.14em]">
+                        Projects:
+                      </span>{" "}
+                      {node.projects}
+                    </p>
+                  )}
+                  {node.certificate && (
+                    <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+                      <span className="uppercase tracking-[0.14em]">
+                        Certificate:
+                      </span>{" "}
+                      <a
+                        href={`https://${node.certificate}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[var(--color-accent-blue)] hover:underline"
+                      >
+                        {node.certificate}
+                      </a>
+                    </p>
+                  )}
                 </GlassPanel>
-              </motion.div>
+              </motion.article>
             ))}
           </div>
         </section>
