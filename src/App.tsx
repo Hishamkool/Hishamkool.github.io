@@ -22,6 +22,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { AnimatedCounter } from "./components/AnimatedCounter";
+import { HeroSection } from "./components/HeroSection";
 import { LanguageTube } from "./components/LanguageTube";
 import { LiquidDock } from "./components/LiquidDock";
 import { ProjectImage } from "./components/ProjectImage";
@@ -873,7 +874,7 @@ function App() {
         <div className="noise-overlay opacity-35" />
       </div>
 
-      <header className="mx-auto w-full max-w-6xl px-4 pb-24 pt-6 md:px-6">
+      <header className="mx-auto w-full max-w-6xl px-4 pb-8 pt-6 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: -18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -894,131 +895,11 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl space-y-20 px-4 pb-32 md:px-6">
-        <section id="home" className="scroll-mt-28 py-10 md:py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: easing }}
-            className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end"
-          >
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-text-secondary)] backdrop-blur-xl">
-                <Zap className="h-3.5 w-3.5" />
-                Available for React.js & Flutter opportunities
-              </div>
-
-              <div className="space-y-5">
-                <p className="text-sm uppercase tracking-[0.28em] text-[var(--color-text-muted)]">
-                  Muhammed Hisham
-                </p>
-                <h1 className="max-w-xl text-5xl font-semibold tracking-[-0.08em] text-[var(--color-text-primary)] md:text-7xl">
-                  React.js Developer
-                  <span className="block text-[var(--color-accent-blue)]">
-                    & Flutter Developer
-                  </span>
-                </h1>
-              </div>
-
-              <p className="max-w-lg text-lg leading-8 text-[var(--color-text-secondary)]">
-                Building clean, responsive interfaces for web and mobile.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => scrollToSection("projects")}
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-blue)] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(47,111,237,0.35)] transition-transform hover:-translate-y-0.5"
-                >
-                  View Work
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollToSection("contact")}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-5 py-3 text-sm font-medium text-[var(--color-text-primary)] backdrop-blur-xl"
-                >
-                  Contact Me
-                </button>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <a
-                  href="https://linkedin.com/in/hisham-ka"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
-                >
-                  LinkedIn
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-                <a
-                  href="https://github.com/Hishamkool"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
-                >
-                  GitHub
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              </div>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: easing, delay: 0.12 }}
-              className="relative"
-            >
-              <GlassPanel className="relative overflow-hidden p-5 md:p-6">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(67,112,255,0.18),_transparent_50%)]" />
-                <div className="relative space-y-5">
-                  <div className="flex items-center justify-between text-[var(--color-text-secondary)]">
-                    <span className="text-xs uppercase tracking-[0.24em]">
-                      Focus
-                    </span>
-                    <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(74,222,128,0.8)]" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-[var(--color-text-muted)]">
-                        Currently building
-                      </p>
-                      <h2 className="mt-2 text-2xl font-semibold text-[var(--color-text-primary)]">
-                        Automax — enterprise workflow automation
-                      </h2>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 pt-2 text-sm text-[var(--color-text-secondary)]">
-                      <div className="rounded-2xl border border-[var(--color-border-glass)] bg-[var(--color-surface)]/60 p-3">
-                        <p className="text-[var(--color-text-muted)]">Years</p>
-                        <p className="mt-1 text-xl font-semibold text-[var(--color-text-primary)]">
-                          <AnimatedCounter
-                            value={yearsOfExperience}
-                            decimals={1}
-                            suffix="+"
-                            once={false}
-                          />
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-[var(--color-border-glass)] bg-[var(--color-surface)]/60 p-3">
-                        <p className="text-[var(--color-text-muted)]">
-                          Apps Shipped
-                        </p>
-                        <p className="mt-1 text-xl font-semibold text-[var(--color-text-primary)]">
-                          <AnimatedCounter
-                            value={appsShipped}
-                            suffix="+"
-                            once={false}
-                          />
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </GlassPanel>
-            </motion.div>
-          </motion.div>
-        </section>
+        <HeroSection
+          yearsOfExperience={yearsOfExperience}
+          appsShipped={appsShipped}
+          onNavigate={scrollToSection}
+        />
 
         <section id="about" className="scroll-mt-28 py-12 md:py-14">
           <div className="mb-8">

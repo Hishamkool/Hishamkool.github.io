@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: "Unbounded", Inter, "Segoe UI", sans-serif;
+}
+
 :root {
   --color-bg-soft: #ffffff;
   --color-surface: rgba(255, 255, 255, 0.72);
@@ -276,6 +280,69 @@ a {
 
 .drop-blob--trail {
   opacity: 0.85;
+}
+
+/* Hero name: accent gradient so it reads as the focal point in both themes. */
+.hero-name {
+  background: linear-gradient(
+    100deg,
+    var(--color-accent-blue) 0%,
+    #7b5cff 55%,
+    var(--color-accent-blue) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 8px 28px rgba(47, 111, 237, 0.25));
+}
+
+/* Dot grid that dissolves toward the edges, like the reference halftone. */
+.hero-dots {
+  background-image: radial-gradient(
+    rgba(47, 111, 237, 0.28) 1.2px,
+    transparent 1.6px
+  );
+  background-size: 14px 14px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 60% 55% at 45% 50%,
+    #000 0%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 60% 55% at 45% 50%,
+    #000 0%,
+    transparent 75%
+  );
+}
+
+.dark .hero-dots {
+  background-image: radial-gradient(
+    rgba(120, 150, 255, 0.22) 1.2px,
+    transparent 1.6px
+  );
+}
+
+/* Soft accent halo behind the portrait. */
+.hero-portrait-glow {
+  background: radial-gradient(
+    ellipse 55% 50% at 50% 42%,
+    rgba(92, 124, 255, 0.35) 0%,
+    rgba(123, 92, 255, 0.14) 45%,
+    transparent 72%
+  );
+  filter: blur(20px);
+}
+
+/* Fade the portrait's bottom and sides into the page so it has no hard edge. */
+.hero-portrait-fade {
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 62%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, #000 62%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-composite: intersect;
 }
 
 @media (prefers-reduced-motion: reduce) {
