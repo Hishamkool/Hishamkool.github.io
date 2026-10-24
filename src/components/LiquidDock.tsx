@@ -38,6 +38,8 @@ type LiquidDockProps = {
 const MAGNIFY_RADIUS = 1.35;
 const MAGNIFY_SCALE = 0.48;
 const NO_HOVER = -10;
+// How long a tapped dock item's label stays visible on touch screens.
+const TAP_LABEL_MS = 1200;
 
 function useMagnify(
   mouseFraction: MotionValue<number>,
@@ -86,6 +88,9 @@ const DockIcon = forwardRef<
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     showHoverLabels?: boolean;
     className?: string;
+    // Right-align the label on mobile so the last item's label stays on screen.
+    alignLabelEnd?: boolean;
+    showTapLabel?: boolean;
   }
 >(function DockIcon(
   {
@@ -98,6 +103,8 @@ const DockIcon = forwardRef<
     onClick,
     showHoverLabels = true,
     className = "flex",
+    alignLabelEnd = false,
+    showTapLabel = false,
   },
   ref,
 ) {
@@ -112,7 +119,15 @@ const DockIcon = forwardRef<
       className={`group relative z-10 ${className} h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--color-text-primary)] min-[380px]:h-12 min-[380px]:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20`}
     >
       {showHoverLabels && (
-        <span className="pointer-events-none absolute -top-10 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] font-medium tracking-[0.12em] text-[var(--color-text-primary)] uppercase opacity-0 shadow-[0_8px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 md:-top-11 md:block md:text-[11px]">
+        <span
+          className={`pointer-events-none absolute -top-10 whitespace-nowrap ${
+            alignLabelEnd
+              ? "right-0 md:right-auto md:left-1/2 md:-translate-x-1/2"
+              : "left-1/2 -translate-x-1/2"
+          } rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] font-medium tracking-[0.12em] text-[var(--color-text-primary)] uppercase shadow-[0_8px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 md:-top-11 md:text-[11px] ${
+            showTapLabel ? "opacity-100" : "opacity-0"
+          }`}
+        >
           {label}
         </span>
       )}
@@ -151,6 +166,23 @@ export function LiquidDock({
     mass: 0.7,
   });
   const [hovering, setHovering] = useState(false);
+
+  // Touch screens have no hover, so tapping an item briefly shows its label;
+  // only the most recently tapped one is shown.
+  const [tapLabelId, setTapLabelId] = useState<string | null>(null);
+  const pointerTypeRef = useRef("mouse");
+  const tapLabelTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(tapLabelTimer.current), []);
+
+  const flashTapLabel = (id: string) => {
+    if (pointerTypeRef.current === "mouse") return;
+    setTapLabelId(id);
+    window.clearTimeout(tapLabelTimer.current);
+    tapLabelTimer.current = window.setTimeout(
+      () => setTapLabelId(null),
+      TAP_LABEL_MS,
+    );
+  };
   const [hoverTargetIndex, setHoverTargetIndex] = useState<number | null>(null);
   const MIN_DROP_SIZE = 16;
   const MAX_DROP_SIZE = 80;
@@ -278,6 +310,9 @@ export function LiquidDock({
       ref={containerRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
+      onPointerDown={(event) => {
+        pointerTypeRef.current = event.pointerType;
+      }}
       style={{ "--glare-angle": glareAngle } as MotionStyle}
       className="liquid-glass pointer-events-auto relative flex w-full max-w-full items-center justify-between rounded-[32px] p-2 md:w-auto md:justify-start md:gap-2 lg:gap-3 lg:rounded-[36px] lg:p-3"
     >
@@ -351,7 +386,12 @@ export function LiquidDock({
           slotCount={slotCount}
           mouseFraction={mouseFraction}
           isActive={item.id === activeSection}
-          onClick={() => onNavigate(item.id)}
+          alignLabelEnd={index === navItems.length - 1}
+          showTapLabel={tapLabelId === item.id}
+          onClick={() => {
+            flashTapLabel(item.id);
+            onNavigate(item.id);
+          }}
           showHoverLabels={showHoverLabels}
         />
       ))}
