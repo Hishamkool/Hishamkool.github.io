@@ -27,6 +27,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { AnimatedCounter } from "./components/AnimatedCounter";
+import { ContactForm } from "./components/ContactForm";
 import { HeroSection } from "./components/HeroSection";
 import { LanguageTube } from "./components/LanguageTube";
 import { LiquidDock } from "./components/LiquidDock";
@@ -1608,42 +1609,45 @@ function App() {
         </section>
 
         <section id="contact" className="scroll-mt-28 pb-12 pt-12 md:pb-18">
-          <GlassPanel className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between md:p-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
-                Contact
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
-                Let’s build the next release.
-              </h2>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <a
-                  href="https://linkedin.com/in/hisham-ka"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
-                >
-                  LinkedIn
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-                <a
-                  href="https://github.com/Hishamkool"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
-                >
-                  GitHub
-                  <ExternalLink className="h-3 w-3" />
-                </a>
+          <GlassPanel className="grid gap-8 p-6 md:p-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+            <div className="flex flex-col justify-between gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-text-muted)]">
+                  Contact
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-[var(--color-text-primary)] md:text-5xl">
+                  Let’s build the next release.
+                </h2>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <a
+                    href="https://linkedin.com/in/hisham-ka"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
+                  >
+                    LinkedIn
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                  <a
+                    href="https://github.com/Hishamkool"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)] backdrop-blur-xl transition-colors hover:text-[var(--color-text-primary)]"
+                  >
+                    GitHub
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
               </div>
+              <a
+                href="mailto:linkedin.hisham@gmail.com"
+                className="inline-flex w-fit items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)] underline-offset-4 transition-colors hover:text-[var(--color-text-primary)] hover:underline"
+              >
+                Or email me directly at linkedin.hisham@gmail.com
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
-            <a
-              href="mailto:hishamkool@yahoo.com"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-blue)] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(47,111,237,0.35)]"
-            >
-              hishamkool@yahoo.com
-              <ArrowRight className="h-4 w-4" />
-            </a>
+            <ContactForm />
           </GlassPanel>
         </section>
       </main>
