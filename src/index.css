@@ -350,8 +350,23 @@ a {
   filter: invert(1) drop-shadow(0 6px 14px var(--shadow-card));
 }
 
-/* Blurred blue-violet halo that spreads behind a hovered project card. */
+/* Blurred halo that spreads behind a hovered project card: warm yellow in
+   light mode, blue-violet in dark mode. */
 .project-glow {
+  background: linear-gradient(135deg, #ffe873 0%, #ffd54a 50%, #ffe873 100%);
+}
+
+/* Solid cards in light mode so the glow stays around the edges; dark mode
+   keeps the translucent glass that lets the glow show through. */
+html:not(.dark) .project-card {
+  background-color: #ffffff;
+}
+
+html:not(.dark) .project-tag {
+  background-color: #eef2f9;
+}
+
+.dark .project-glow {
   background: linear-gradient(
     135deg,
     var(--color-accent-blue) 0%,
@@ -371,6 +386,10 @@ a {
 }
 
 .group:hover > .project-card {
+  box-shadow: 0 18px 40px rgba(255, 205, 60, 0.35);
+}
+
+.dark .group:hover > .project-card {
   box-shadow: 0 18px 40px
     color-mix(in oklab, var(--color-accent-blue) 35%, transparent);
 }

@@ -1270,7 +1270,7 @@ function App() {
                       </div>
                       <div className="space-y-4 p-5">
                         <div className="flex items-start justify-between gap-3">
-                          <span className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
+                          <span className="project-tag rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
                             {project.category}
                           </span>
                           <div className="relative z-20 flex flex-wrap justify-end gap-x-3 gap-y-1 text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
@@ -1362,7 +1362,7 @@ function App() {
                           {project.stack.map((item) => (
                             <span
                               key={item}
-                              className="rounded-full bg-[var(--color-bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]"
+                              className="project-tag rounded-full bg-[var(--color-bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]"
                             >
                               {item}
                             </span>
