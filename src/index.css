@@ -350,6 +350,31 @@ a {
   filter: invert(1) drop-shadow(0 6px 14px var(--shadow-card));
 }
 
+/* Blurred blue-violet halo that spreads behind a hovered project card. */
+.project-glow {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-blue) 0%,
+    #7b5cff 50%,
+    var(--color-accent-blue) 100%
+  );
+}
+
+.group:hover > .project-glow,
+.group:focus-within > .project-glow {
+  opacity: 0.55;
+}
+
+.dark .group:hover > .project-glow,
+.dark .group:focus-within > .project-glow {
+  opacity: 0.45;
+}
+
+.group:hover > .project-card {
+  box-shadow: 0 18px 40px
+    color-mix(in oklab, var(--color-accent-blue) 35%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

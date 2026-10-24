@@ -710,6 +710,12 @@ function getYearsOfExperience(nodes: TimelineNode[]): number {
   return Math.max(0, Math.round(years * 10) / 10);
 }
 
+// The link a project card opens when clicked, by priority.
+function getPrimaryLink(project: Project): string | undefined {
+  const { live, playStore, appStore, github, download } = project.links;
+  return live ?? playStore ?? appStore ?? github ?? download;
+}
+
 function GlassPanel({
   children,
   className = "",
@@ -1223,130 +1229,150 @@ function App() {
               layout
               className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
             >
-              {visibleProjects.map((project) => (
-                <motion.article
-                  key={project.title}
-                  layout
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4, ease: easing }}
-                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                  className="group overflow-hidden rounded-[24px] border border-[var(--color-border-glass)] bg-[var(--color-surface)]/70 shadow-[0_12px_30px_0_var(--shadow-card)]"
-                >
-                  <div className="overflow-hidden">
-                    <ProjectImage
-                      slug={project.slug}
-                      live={project.links.live}
-                      appStore={project.links.appStore}
-                      fallback={project.image}
-                      alt={project.title}
-                      className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
+              {visibleProjects.map((project) => {
+                const primaryLink = getPrimaryLink(project);
+                return (
+                  <motion.div
+                    key={project.title}
+                    layout
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.4, ease: easing }}
+                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                    className="group relative isolate"
+                  >
+                    <div
+                      aria-hidden
+                      className="project-glow pointer-events-none absolute -inset-4 -z-10 rounded-[36px] opacity-0 blur-2xl transition-opacity duration-500"
                     />
-                  </div>
-                  <div className="space-y-4 p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <span className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
-                        {project.category}
-                      </span>
-                      <div className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
-                        {project.links.live && (
-                          <a
-                            href={project.links.live}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="Live"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            Live
-                          </a>
-                        )}
-                        {project.links.github && (
-                          <a
-                            href={project.links.github}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="GitHub"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            Code
-                          </a>
-                        )}
-                        {project.links.appStore && (
-                          <a
-                            href={project.links.appStore}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="App Store"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            App Store
-                          </a>
-                        )}
-                        {project.links.playStore && (
-                          <a
-                            href={project.links.playStore}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="Play Store"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            Play Store
-                          </a>
-                        )}
-                        {project.links.figma && (
-                          <a
-                            href={project.links.figma}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="Figma"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            Figma
-                          </a>
-                        )}
-                        {project.links.download && (
-                          <a
-                            href={project.links.download}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="Download"
-                            className="hover:text-[var(--color-text-primary)]"
-                          >
-                            Download
-                          </a>
-                        )}
-                        {!Object.values(project.links).some(Boolean) &&
-                          project.internalNote && (
-                            <span className="normal-case tracking-normal text-[var(--color-text-muted)]">
-                              {project.internalNote}
-                            </span>
-                          )}
+                    <article className="project-card relative h-full overflow-hidden rounded-[24px] border border-[var(--color-border-glass)] bg-[var(--color-surface)]/70 shadow-[0_12px_30px_0_var(--shadow-card)] transition-shadow duration-500">
+                      {/* Stretched link: clicking anywhere on the card opens
+                          its primary link; the small links sit above it. */}
+                      {primaryLink && (
+                        <a
+                          href={primaryLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Open ${project.title}`}
+                          className="absolute inset-0 z-10 rounded-[24px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-blue)]"
+                        />
+                      )}
+                      <div className="overflow-hidden">
+                        <ProjectImage
+                          slug={project.slug}
+                          live={project.links.live}
+                          appStore={project.links.appStore}
+                          fallback={project.image}
+                          alt={project.title}
+                          className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
                       </div>
-                    </div>
+                      <div className="space-y-4 p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <span className="rounded-full border border-[var(--color-border-glass)] bg-[var(--color-surface-glass)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
+                            {project.category}
+                          </span>
+                          <div className="relative z-20 flex flex-wrap justify-end gap-x-3 gap-y-1 text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
+                            {project.links.live && (
+                              <a
+                                href={project.links.live}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Live"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                Live
+                              </a>
+                            )}
+                            {project.links.github && (
+                              <a
+                                href={project.links.github}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="GitHub"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                Code
+                              </a>
+                            )}
+                            {project.links.appStore && (
+                              <a
+                                href={project.links.appStore}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="App Store"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                App Store
+                              </a>
+                            )}
+                            {project.links.playStore && (
+                              <a
+                                href={project.links.playStore}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Play Store"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                Play Store
+                              </a>
+                            )}
+                            {project.links.figma && (
+                              <a
+                                href={project.links.figma}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Figma"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                Figma
+                              </a>
+                            )}
+                            {project.links.download && (
+                              <a
+                                href={project.links.download}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Download"
+                                className="hover:text-[var(--color-text-primary)]"
+                              >
+                                Download
+                              </a>
+                            )}
+                            {!Object.values(project.links).some(Boolean) &&
+                              project.internalNote && (
+                                <span className="normal-case tracking-normal text-[var(--color-text-muted)]">
+                                  {project.internalNote}
+                                </span>
+                              )}
+                          </div>
+                        </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">
-                        {project.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-                        {project.description}
-                      </p>
-                    </div>
+                        <div>
+                          <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">
+                            {project.title}
+                          </h3>
+                          <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+                            {project.description}
+                          </p>
+                        </div>
 
-                    <div className="flex flex-wrap gap-2">
-                      {project.stack.map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full bg-[var(--color-bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((item) => (
+                            <span
+                              key={item}
+                              className="rounded-full bg-[var(--color-bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-secondary)]"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </AnimatePresence>
 
