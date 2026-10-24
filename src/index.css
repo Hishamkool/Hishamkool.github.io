@@ -376,12 +376,12 @@ html:not(.dark) .project-tag {
 }
 
 .group:hover > .project-glow,
-.group:focus-within > .project-glow {
+.group:has(:focus-visible) > .project-glow {
   opacity: 0.55;
 }
 
 .dark .group:hover > .project-glow,
-.dark .group:focus-within > .project-glow {
+.dark .group:has(:focus-visible) > .project-glow {
   opacity: 0.45;
 }
 
