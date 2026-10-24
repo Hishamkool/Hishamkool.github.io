@@ -170,6 +170,10 @@ export function LiquidDock({
   // Touch screens have no hover, so tapping an item briefly shows its label;
   // only the most recently tapped one is shown.
   const [tapLabelId, setTapLabelId] = useState<string | null>(null);
+  // A tap also counts as a hover, and with no mouseleave on touch the drop
+  // would linger, so it shrinks away together with the label. The icon stays
+  // magnified to show what was tapped.
+  const [dropCollapsed, setDropCollapsed] = useState(false);
   const pointerTypeRef = useRef("mouse");
   const tapLabelTimer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(tapLabelTimer.current), []);
@@ -178,10 +182,10 @@ export function LiquidDock({
     if (pointerTypeRef.current === "mouse") return;
     setTapLabelId(id);
     window.clearTimeout(tapLabelTimer.current);
-    tapLabelTimer.current = window.setTimeout(
-      () => setTapLabelId(null),
-      TAP_LABEL_MS,
-    );
+    tapLabelTimer.current = window.setTimeout(() => {
+      setTapLabelId(null);
+      setDropCollapsed(true);
+    }, TAP_LABEL_MS);
   };
   const [hoverTargetIndex, setHoverTargetIndex] = useState<number | null>(null);
   const MIN_DROP_SIZE = 16;
@@ -266,6 +270,7 @@ export function LiquidDock({
     dropX.set(fraction);
     setHoverTargetIndex(nearestIndex);
     setHovering(true);
+    setDropCollapsed(false);
   };
 
   const handleLeave = () => {
@@ -294,9 +299,13 @@ export function LiquidDock({
   );
 
   useEffect(() => {
-    const nextSize = hoverTargetIndex === null ? MIN_DROP_SIZE : targetDropSize;
+    const nextSize = dropCollapsed
+      ? 0
+      : hoverTargetIndex === null
+        ? MIN_DROP_SIZE
+        : targetDropSize;
     dropSize.set(nextSize);
-  }, [dropSize, hoverTargetIndex, targetDropSize]);
+  }, [dropSize, dropCollapsed, hoverTargetIndex, targetDropSize]);
 
   const blobWidth = useTransform(dropSize, (size) => `${size}px`);
   const blobHeight = useTransform(dropSize, (size) => `${size}px`);
